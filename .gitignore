@@ -1,0 +1,189 @@
+# ========================================
+# .gitignore untuk Proyek Orthanc
+# ========================================
+
+# ------------------
+# Orthanc Data & Storage
+# ------------------
+# Seluruh folder orthanc-data (recursive)
+orthanc-data/
+
+# Database files di root
+*.db
+*.db-shm
+*.db-wal
+index*
+index-wal
+journal/
+DICOM_SAMPLES/
+orthanc-data/
+
+# ------------------
+# Backup Files
+# ------------------
+BACKUPS/
+*.backup
+*.bak
+backup-*/
+*backup*
+
+# ------------------
+# Log Files
+# ------------------
+logs/
+*.log
+*.log.*
+
+# ------------------
+# Sensitive Configuration
+# ------------------
+# Uncomment jika tidak ingin commit config dengan password
+# orthanc.json
+
+# File config dengan password
+*_config.json
+*_secrets.json
+*_credentials.json
+*.env
+*.env.local
+*.env.production
+
+# ------------------
+# Docker & Container
+# ------------------
+docker-compose-override.yml
+.docker/
+.dockerignore
+
+# ------------------
+# IDE & Editor Files
+# ------------------
+# VS Code
+.vscode/
+*.code-workspace
+*.code-snippets
+
+# Sublime Text
+*.sublime-*
+*.sublime-workspace
+
+# Vim/Neovim
+*.swp
+*.swo
+*.swn
+.*.swp
+.*.un~
+Session.vim
+Sessionx.vim
+
+# Emacs
+*~
+\#*\#
+.\#*\#
+._*
+
+# Atom
+.atom/
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# JetBrains
+.idea/
+*.iml
+
+# ------------------
+# OS Files
+# ------------------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Thumbnails
+._*
+
+# Files yang mungkin muncul di root volume
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Direktori yang mungkin dibuat di remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+*.url
+
+# Linux
+*~
+.nfs*
+.directory
+
+# ------------------
+# Python
+# ------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+
+# ------------------
+# Temporary Files
+# ------------------
+tmp/
+temp/
+*.tmp
+*.temp
+DOKUMENTASI-PENUH-TEMP.md
+images.tar
+
+# ------------------
+# Archive Files
+# ------------------
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+*.iso
+*.dmg
+
+# ------------------
+# KECEPATI PENTING
+# ------------------
+# JANGAN meng-ignore file penting berikut:
+README.md
+docker-compose.yml
+DOKUMENTASI-*.md
+check_*.sh
+orthanc.json.example
+
+# Temporary files yang sebaiknya di-ignore
+daae3df7f522b56724aed7e3e544c0fe/
+Orthanc-Complete-Setup-Guide/DOKUMENTASI-PENUH-TEMP.md
+
+# File yang ingin DI-IMPORTAN ke git:
+!README.md
+!docker-compose.yml
+!DOKUMENTASI-LENGKAP-ORTHANC.md
+!DOKUMENTASI-*.md
+!check_*.sh
+!orthanc.json.example

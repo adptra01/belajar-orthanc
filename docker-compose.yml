@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  orthanc:
+    # Kita menggunakan image yang sudah berisi plugin lengkap
+    image: docker.io/jodogne/orthanc-plugins:latest 
+    container_name: server-orthanc
+    ports:
+      - "8042:8042" # Port HTTP: Kiri (Laptop Anda) : Kanan (Dalam Container)
+      - "4242:4242" # Port DICOM: Untuk menerima gambar dari mesin X-Ray
+    volumes:
+      - ./orthanc-data:/var/lib/orthanc/db # Menyimpan data agar tidak hilang saat container mati
+    restart: unless-stopped
