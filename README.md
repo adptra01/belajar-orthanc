@@ -8,24 +8,22 @@ Proyek untuk belajar dan eksplorasi Orthanc, server DICOM ringan dan RESTful.
 belajar-orthanc/
 ├── docker-compose.yml          # Konfigurasi container
 ├── README.md                  # File ini
-├── DOKUMENTASI-ORTHANC.md     # Dokumentasi lengkap dasar
-├── PLUGIN-ORTHANC-DETAILED.md # Dokumentasi plugin & konfigurasi detail
-├── TUTORIAL-ORTHANC-WEB.md   # Tutorial penggunaan aplikasi web
-├── ORTHANC-CHEAT-SHEET.md    # Cheat sheet & referensi cepat
-├── check_dicom.sh             # Script untuk check DICOM file
-├── check-orthanc.sh          # Script check status Orthanc
-├── orthanc.json              # Konfigurasi Orthanc
-├── orthanc.json.example      # Contoh konfigurasi
-├── orthanc-data/              # Data persisten Orthanc
-├── BACKUPS/                   # Backup files
-│   ├── orthanc.json.backup   # Backup konfigurasi
-│   ├── daae3df7f522b56724aed7e3e544c0fe.zip
-│   ├── daae3df7f522b56724aed7e3e544c0fe/
-│   ├── images.tar
-│   └── MR000000.dcm
-└── DICOM_SAMPLES/             # Contoh file DICOM
-    ├── sample_file_dcom/     # Contoh DICOM series
-    └── MR000000.dcm          # File DICOM contoh
+├── config/                    # File konfigurasi
+│   └── orthanc.json.example  # Contoh konfigurasi Orthanc
+├── data/                      # Data runtime
+│   ├── orthanc/               # Data persisten Orthanc (database + DICOM)
+│   └── backups/               # Backup files
+├── docs/                      # Dokumentasi
+│   ├── guide/                 # Panduan setup bertahap (15 bagian)
+│   └── reference/             # Dokumentasi referensi
+│       ├── DOKUMENTASI-ORTHANC.md
+│       ├── PLUGIN-ORTHANC-DETAILED.md
+│       ├── TUTORIAL-ORTHANC-WEB.md
+│       └── ...
+└── scripts/                   # Script utilities
+    ├── check-orthanc.sh       # Cek status Orthanc
+    ├── check-dicom.sh         # Validasi file DICOM
+    └── deploy-orthanc.sh      # Deploy ke produksi
 ```
 
 ## 🚀 Cepat Mulai
@@ -51,52 +49,79 @@ docker-compose ps
 docker-compose logs orthanc
 
 # Gunakan script bawaan
-./check-orthanc.sh
+./scripts/check-orthanc.sh
 ```
 
-## 📚 Dokumentasi Lengkap
+## 📚 Landskap Dokumentasi
 
-### [DOKUMENTASI-ORTHANC.md](DOKUMENTASI-ORTHANC.md)
-- Instalasi dan setup langkah demi langkah
-- Konfigurasi detail
-- Penggunaan dasar melalui web interface
-- REST API dengan contoh
-- DICOM operations
-- Troubleshooting
-- Security considerations
+### Dokumentasi Inti
 
-### [PLUGIN-ORTHANC-DETAILED.md](PLUGIN-ORTHANC-DETAILED.md)
-- Pengenalan plugin Orthanc
-- Jenis plugin dan fungsinya
-- Instalasi plugin
-- Konfigurasi plugin
-- Plugin populer (Lua, Web Viewer, PDF Export)
-- Tutorial penggunaan aplikasi web detail
-- API plugin
-- Konfigurasi lanjutan
-- Optimasi performa
-- Debugging dan troubleshooting
+| File | Fokus | Ukuran |
+|------|-------|--------|
+| [DOKUMENTASI-ORTHANC.md](docs/reference/DOKUMENTASI-ORTHANC.md) | Dokumentasi lengkap (install, API, troubleshooting) | ~26KB |
+| [PLUGIN-ORTHANC-DETAILED.md](docs/reference/PLUGIN-ORTHANC-DETAILED.md) | Plugin, konfigurasi lanjutan, API plugin | ~45KB |
+| [TUTORIAL-ORTHANC-WEB.md](docs/reference/TUTORIAL-ORTHANC-WEB.md) | Panduan lengkap web interface | ~42KB |
+| [ORTHANC-CHEAT-SHEET.md](docs/reference/ORTHANC-CHEAT-SHEET.md) | Referensi cepat perintah & API | ~12KB |
+| [ORTHANC-FOR-BEGINNERS-COMPLETE.md](docs/reference/ORTHANC-FOR-BEGINNERS-COMPLETE.md) | Panduan pemula: planning hingga deployment online | ~45KB |
+| [DOKUMENTASI-LENGKAP-ORTHANC.md](docs/reference/DOKUMENTASI-LENGKAP-ORTHANC.md) | Index/ringkasan yang mereferensi ke file sumber lain | ~3KB |
 
-### [TUTORIAL-ORTHANC-WEB.md](TUTORIAL-ORTHANC-WEB.md)
-- Dashboard dan overview
-- Navigasi interface
-- Mengelola pasien
-- Studi dan series
-- Viewer gambar DICOM (MPR, 3D)
-- Export dan sharing
-- Search dan filter advanced
-- Tools utilities
-- Workflows otomatis (Lua scripting)
-- Tips dan best practices
+### Panduan Setup Bertahap
 
-### [ORTHANC-CHEAT-SHEET.md](ORTHANC-CHEAT-SHEET.md)
-- Commands quick reference (Docker/Podman)
-- API endpoints
-- Common operations
-- Configuration examples
-- Common issues & solutions
-- Quick scripts
-- URLs
+[docs/guide/](./docs/guide/) — 15 bagian dari spesifikasi sistem hingga troubleshooting:
+
+| Bagian | Topik |
+|--------|-------|
+| 01-03 | Spesifikasi sistem, alat, konfigurasi jaringan |
+| 04-06 | API, plugin, konfigurasi PACS |
+| 07-09 | Konfigurasi inti, akses lokal & online |
+| 10 | Troubleshooting |
+| 11-15 | Referensi, cheat sheet, plugin, web, setup pemula |
+
+### Catatan Duplikasi (Tersisa)
+
+Topik yang masih muncul di banyak file. Jika mengedit, periksa konsistensi antar file:
+- **Install & Docker commands**: README, DOKUMENTASI-ORTHANC, CHEAT-SHEET, panduan setup
+- **API endpoints**: DOKUMENTASI-ORTHANC, CHEAT-SHEET, panduan API
+- **Troubleshooting**: DOKUMENTASI-ORTHANC, CHEAT-SHEET, ORTHANC-FOR-BEGINNERS, PLUGIN
+- **Web interface**: DOKUMENTASI-ORTHANC, TUTORIAL-ORTHANC-WEB, PLUGIN
+
+> Duplikasi besar yang telah diperbaiki:
+> - `DOKUMENTASI-LENGKAP-ORTHANC.md` (257KB→3KB): Diubah jadi index yang mereferensi file sumber
+> - `Orthanc-Complete-Setup-Guide/11-15`: Diubah jadi thin reference ke file referensi masing-masing
+
+## 📜 Scripts Reference
+
+<!-- AUTO-GENERATED from scripts/ directory -->
+| Script | Perintah | Deskripsi |
+|--------|----------|-----------|
+| `scripts/check-orthanc.sh` | `./scripts/check-orthanc.sh all` | Cek status lengkap Orthanc (Docker, API, disk, DB, network) |
+| | `./scripts/check-orthanc.sh status` | Ringkasan status container |
+| | `./scripts/check-orthanc.sh docker` | Cek Docker service |
+| | `./scripts/check-orthanc.sh container` | Cek container Orthanc |
+| | `./scripts/check-orthanc.sh api` | Cek Orthanc API |
+| | `./scripts/check-orthanc.sh db` | Cek integritas database |
+| | `./scripts/check-orthanc.sh disk` | Cek ruang disk |
+| `scripts/check-dicom.sh` | `./scripts/check-dicom.sh <file.dcm>` | Validasi file DICOM + upload ke Orthanc |
+| `scripts/deploy-orthanc.sh` | `./scripts/deploy-orthanc.sh deploy` | Deploy ke server produksi |
+| | `./scripts/deploy-orthanc.sh backup` | Backup instalasi |
+| | `./scripts/deploy-orthanc.sh rollback` | Rollback ke backup terakhir |
+| | `./scripts/deploy-orthanc.sh check` | Cek status deployment |
+<!-- AUTO-GENERATED -->
+
+## ⚙️ Konfigurasi Lingkungan
+
+<!-- AUTO-GENERATED from docker-compose.yml & orthanc.json.example -->
+- **HTTP Port**: 8042 | **DICOM Port**: 4242 | **Storage**: `./data/orthanc` | **Auth**: Disabled
+
+| Key | Default | Deskripsi |
+|-----|---------|-----------|
+| `Name` | `Orthanc (DICOM Server)` | Nama server |
+| `HttpPort` | `8042` | Port HTTP |
+| `DicomPort` | `4242` | Port DICOM |
+| `AuthenticationEnabled` | `false` | Aktifkan login |
+| `DefaultEncoding` | `ExplicitVRLittleEndian` | Encoding DICOM |
+| `StorageDirectory` | `/var/lib/orthanc/db` | Lokasi penyimpanan |
+<!-- AUTO-GENERATED -->
 
 ## 🛠️ Useful Commands
 
@@ -106,7 +131,7 @@ docker-compose logs orthanc
 curl -X POST -T DICOM_SAMPLES/MR000000.dcm http://localhost:8042/studies
 
 # Gunakan script bawaan
-./check_dicom.sh DICOM_SAMPLES/MR000000.dcm
+./scripts/check-dicom.sh DICOM_SAMPLES/MR000000.dcm
 ```
 
 ### Export Data
@@ -149,13 +174,6 @@ docker-compose down
 podman-compose down
 ```
 
-## ⚙️ Konfigurasi
-
-- **HTTP Port**: 8042
-- **DICOM Port**: 4242
-- **Data Storage**: `./orthanc-data`
-- **Authentication**: Disabled
-
 ## 🔧 Instalasi Plugin (Opsional)
 
 Jika ingin menggunakan plugin tambahan:
@@ -187,7 +205,4 @@ Jika ingin menggunakan plugin tambahan:
 - Pastikan container berjalan: `docker-compose ps`
 - Cek log: `docker-compose logs orthanc`
 - Cek port: `netstat -tlnp | grep 8042`
-- Reset database jika diperlukan (lihat dokumentasi lengkap)# belajar-orthanc
-# belajar-orthanc
-# belajar-orthanc
-# belajar-orthanc
+- Reset database jika diperlukan (lihat dokumentasi lengkap)

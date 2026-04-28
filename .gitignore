@@ -5,22 +5,22 @@
 # ------------------
 # Orthanc Data & Storage
 # ------------------
-# Seluruh folder orthanc-data (recursive)
-orthanc-data/
-
-# Database files di root
+# Database files
 *.db
 *.db-shm
 *.db-wal
 index*
 index-wal
 journal/
+
+# Orthanc runtime data
+data/orthanc/
 DICOM_SAMPLES/
-orthanc-data/
 
 # ------------------
 # Backup Files
 # ------------------
+data/backups/
 BACKUPS/
 *.backup
 *.bak
@@ -174,7 +174,7 @@ README.md
 docker-compose.yml
 DOKUMENTASI-*.md
 check_*.sh
-orthanc.json.example
+config/orthanc.json.example
 
 # Temporary files yang sebaiknya di-ignore
 daae3df7f522b56724aed7e3e544c0fe/
@@ -186,4 +186,4 @@ Orthanc-Complete-Setup-Guide/DOKUMENTASI-PENUH-TEMP.md
 !DOKUMENTASI-LENGKAP-ORTHANC.md
 !DOKUMENTASI-*.md
 !check_*.sh
-!orthanc.json.example
+!config/orthanc.json.example
