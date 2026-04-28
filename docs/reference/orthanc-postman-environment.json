@@ -1,0 +1,48 @@
+{
+  "id": "orthanc-environment",
+  "name": "Orthanc Environment",
+  "values": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8042",
+      "type": "string",
+      "description": "Base URL Orthanc server"
+    },
+    {
+      "key": "auth_username",
+      "value": "orthanc",
+      "type": "string",
+      "description": "Username Basic Auth"
+    },
+    {
+      "key": "auth_password",
+      "value": "orthanc",
+      "type": "string",
+      "description": "Password Basic Auth"
+    },
+    {
+      "key": "patient_id",
+      "value": "",
+      "type": "string",
+      "description": "Isi dari GET /patients setelah server berjalan"
+    },
+    {
+      "key": "study_id",
+      "value": "",
+      "type": "string",
+      "description": "Isi dari GET /studies setelah server berjalan"
+    },
+    {
+      "key": "series_id",
+      "value": "",
+      "type": "string",
+      "description": "Isi dari GET /series setelah server berjalan"
+    },
+    {
+      "key": "instance_id",
+      "value": "",
+      "type": "string",
+      "description": "Isi dari GET /instances setelah server berjalan"
+    }
+  ]
+}

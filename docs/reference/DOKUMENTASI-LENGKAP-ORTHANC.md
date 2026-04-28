@@ -11,6 +11,8 @@
 | [TUTORIAL-ORTHANC-WEB.md](./TUTORIAL-ORTHANC-WEB.md) | Web interface lengkap: viewer, export, search, workflows |
 | [ORTHANC-CHEAT-SHEET.md](./ORTHANC-CHEAT-SHEET.md) | Referensi cepat perintah, API, konfigurasi, troubleshooting |
 | [ORTHANC-FOR-BEGINNERS-COMPLETE.md](./ORTHANC-FOR-BEGINNERS-COMPLETE.md) | Panduan pemula: planning hingga deployment online |
+| [ORTHANC-API-REFERENCE.md](./ORTHANC-API-REFERENCE.md) | Dokumentasi REST API lengkap dengan contoh teruji |
+| [orthanc-website-integration.md](../plan/orthanc-website-integration.md) | Panduan integrasi Orthanc dengan website kustom |
 
 ## Panduan Setup Bertahap
 

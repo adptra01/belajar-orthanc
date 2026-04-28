@@ -1,0 +1,767 @@
+{
+  "info": {
+    "name": "Orthanc DICOM Server API",
+    "description": "Koleksi lengkap REST API Orthanc DICOM Server.\n\n**Base URL:** `http://localhost:8042`\n**Auth:** Basic Auth (default: orthanc:orthanc)\n\nDokumentasi lengkap: [ORTHANC-API-REFERENCE.md](./ORTHANC-API-REFERENCE.md)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "orthanc-api-design"
+  },
+  "auth": {
+    "type": "basic",
+    "basic": [
+      { "key": "username", "value": "orthanc", "type": "string" },
+      { "key": "password", "value": "orthanc", "type": "string" }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8042",
+      "type": "string"
+    },
+    {
+      "key": "patient_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "study_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "series_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "instance_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. System",
+      "description": "Endpoint untuk informasi sistem dan konfigurasi server Orthanc.",
+      "item": [
+        {
+          "name": "GET /system — Info Server",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/system",
+              "host": ["{{base_url}}"],
+              "path": ["system"]
+            },
+            "description": "Mengembalikan informasi detail server Orthanc: versi, konfigurasi, kapabilitas."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"ApiVersion\": 29,\n  \"DatabaseVersion\": 6,\n  \"DicomAet\": \"ORTHANC\",\n  \"DicomPort\": 4242,\n  \"HttpPort\": 8042,\n  \"Name\": \"Orthanc inside Docker\",\n  \"Version\": \"mainline\",\n  \"ReadOnly\": false,\n  \"PluginsEnabled\": true,\n  \"StorageCompression\": false\n}"
+            }
+          ]
+        },
+        {
+          "name": "GET /tools/now — Waktu Server (UTC)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/tools/now",
+              "host": ["{{base_url}}"],
+              "path": ["tools", "now"]
+            },
+            "description": "Mengembalikan waktu server dalam format UTC: YYYYMMDDThhmmss"
+          }
+        },
+        {
+          "name": "GET /tools/now-local — Waktu Server (Lokal)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/tools/now-local",
+              "host": ["{{base_url}}"],
+              "path": ["tools", "now-local"]
+            },
+            "description": "Mengembalikan waktu server dalam zona waktu lokal."
+          }
+        },
+        {
+          "name": "GET /tools/generate-uid — Generate UID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/tools/generate-uid",
+              "host": ["{{base_url}}"],
+              "path": ["tools", "generate-uid"]
+            },
+            "description": "Menghasilkan DICOM UID unik untuk objek DICOM baru."
+          }
+        },
+        {
+          "name": "GET /tools/default-encoding — Default Encoding",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/tools/default-encoding",
+              "host": ["{{base_url}}"],
+              "path": ["tools", "default-encoding"]
+            },
+            "description": "Menampilkan encoding default server (Latin1, UTF-8, dll)."
+          }
+        },
+        {
+          "name": "GET /tools/dicom-conformance — DICOM Statement",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/tools/dicom-conformance",
+              "host": ["{{base_url}}"],
+              "path": ["tools", "dicom-conformance"]
+            },
+            "description": "Menampilkan SOP Classes yang didukung Orthanc untuk C-Store SCP."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Patients",
+      "description": "CRUD operations untuk resource Patient.",
+      "item": [
+        {
+          "name": "GET /patients — Semua Pasien",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/patients",
+              "host": ["{{base_url}}"],
+              "path": ["patients"],
+              "query": [
+                {
+                  "key": "expand",
+                  "value": "false",
+                  "description": "Jika true, kembalikan objek lengkap (bukan hanya ID)",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "",
+                  "description": "Batasi jumlah hasil",
+                  "disabled": true
+                },
+                {
+                  "key": "since",
+                  "value": "",
+                  "description": "Pagination: mulai dari ID tertentu",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Mengembalikan daftar semua pasien dalam database."
+          }
+        },
+        {
+          "name": "GET /patients?expand=true — Semua Pasien (Detail)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/patients?expand=true",
+              "host": ["{{base_url}}"],
+              "path": ["patients"],
+              "query": [
+                {
+                  "key": "expand",
+                  "value": "true"
+                }
+              ]
+            },
+            "description": "Mengembalikan semua pasien dengan detail lengkap."
+          }
+        },
+        {
+          "name": "GET /patients/:id — Detail Pasien",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/patients/{{patient_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["patients", "{{patient_id}}"]
+            },
+            "description": "Mengembalikan detail pasien termasuk MainDicomTags dan daftar studi."
+          }
+        },
+        {
+          "name": "GET /patients/:id/studies — Studi Pasien",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/patients/{{patient_id}}/studies",
+              "host": ["{{base_url}}"],
+              "path": ["patients", "{{patient_id}}", "studies"]
+            },
+            "description": "Mengembalikan semua studi milik pasien tertentu."
+          }
+        },
+        {
+          "name": "POST /patients/:id/anonymize — Anonimisasi",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/patients/{{patient_id}}/anonymize",
+              "host": ["{{base_url}}"],
+              "path": ["patients", "{{patient_id}}", "anonymize"]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Replace\": {\n    \"PatientName\": \"ANONYMIZED\",\n    \"PatientID\": \"ANON001\"\n  }\n}"
+            },
+            "description": "Membuat salinan pasien dengan data identitas yang diganti."
+          }
+        },
+        {
+          "name": "POST /patients/:id/protected — Proteksi Pasien",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/patients/{{patient_id}}/protected",
+              "host": ["{{base_url}}"],
+              "path": ["patients", "{{patient_id}}", "protected"]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "true"
+            },
+            "description": "Mencegah penghapusan tidak sengaja. Set ke false untuk unproteksi."
+          }
+        },
+        {
+          "name": "DELETE /patients/:id — Hapus Pasien",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/patients/{{patient_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["patients", "{{patient_id}}"]
+            },
+            "description": "Menghapus pasien beserta semua studi, series, dan instances-nya."
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Studies",
+      "description": "CRUD operations untuk resource Study.",
+      "item": [
+        {
+          "name": "GET /studies — Semua Studi",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/studies",
+              "host": ["{{base_url}}"],
+              "path": ["studies"],
+              "query": [
+                {
+                  "key": "expand",
+                  "value": "false",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Mengembalikan daftar semua studi."
+          }
+        },
+        {
+          "name": "GET /studies/:id — Detail Studi",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/studies/{{study_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["studies", "{{study_id}}"]
+            },
+            "description": "Detail studi termasuk MainDicomTags, parent patient, dan daftar series."
+          }
+        },
+        {
+          "name": "GET /studies/:id/series — Series dalam Studi",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/studies/{{study_id}}/series",
+              "host": ["{{base_url}}"],
+              "path": ["studies", "{{study_id}}", "series"]
+            },
+            "description": "Mengembalikan semua series dalam studi tertentu."
+          }
+        },
+        {
+          "name": "POST /studies — Upload DICOM File",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/studies",
+              "host": ["{{base_url}}"],
+              "path": ["studies"]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/dicom" }
+            ],
+            "body": {
+              "mode": "file",
+              "file": {
+                "src": ""
+              }
+            },
+            "description": "Upload file DICOM. Content-Type harus application/dicom, body berisi binary file."
+          }
+        },
+        {
+          "name": "POST /studies/:id/archive — Export ZIP",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/studies/{{study_id}}/archive",
+              "host": ["{{base_url}}"],
+              "path": ["studies", "{{study_id}}", "archive"]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "description": "Membuat archive ZIP seluruh studi. Async — mengembalikan Job ID."
+          }
+        },
+        {
+          "name": "POST /studies/:id/anonymize — Anonimisasi Studi",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/studies/{{study_id}}/anonymize",
+              "host": ["{{base_url}}"],
+              "path": ["studies", "{{study_id}}", "anonymize"]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Replace\": {\n    \"PatientName\": \"ANONYMIZED\"\n  }\n}"
+            },
+            "description": "Membuat salinan studi dengan data identitas diganti."
+          }
+        },
+        {
+          "name": "DELETE /studies/:id — Hapus Studi",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/studies/{{study_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["studies", "{{study_id}}"]
+            },
+            "description": "Menghapus studi beserta semua series dan instances-nya."
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Series",
+      "description": "Operations untuk resource Series.",
+      "item": [
+        {
+          "name": "GET /series — Semua Series",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/series",
+              "host": ["{{base_url}}"],
+              "path": ["series"]
+            },
+            "description": "Mengembalikan daftar semua series."
+          }
+        },
+        {
+          "name": "GET /series/:id — Detail Series",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/series/{{series_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["series", "{{series_id}}"]
+            },
+            "description": "Detail series termasuk MainDicomTags (modalitas, protokol, dll)."
+          }
+        },
+        {
+          "name": "GET /series/:id/instances — Instances",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/series/{{series_id}}/instances",
+              "host": ["{{base_url}}"],
+              "path": ["series", "{{series_id}}", "instances"]
+            },
+            "description": "Mengembalikan semua instances dalam series."
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Instances",
+      "description": "Operations untuk resource Instance (gambar DICOM individual).",
+      "item": [
+        {
+          "name": "GET /instances — Semua Instances",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/instances",
+              "host": ["{{base_url}}"],
+              "path": ["instances"]
+            },
+            "description": "Mengembalikan daftar semua instances."
+          }
+        },
+        {
+          "name": "GET /instances/:id — Detail Instance",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/instances/{{instance_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["instances", "{{instance_id}}"]
+            },
+            "description": "Detail instance termasuk file size, index, dan DICOM tags."
+          }
+        },
+        {
+          "name": "GET /instances/:id/file — Download DICOM",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/instances/{{instance_id}}/file",
+              "host": ["{{base_url}}"],
+              "path": ["instances", "{{instance_id}}", "file"]
+            },
+            "description": "Download file DICOM asli. Save response sebagai .dcm file."
+          }
+        },
+        {
+          "name": "GET /instances/:id/metadata — Metadata",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/instances/{{instance_id}}/metadata",
+              "host": ["{{base_url}}"],
+              "path": ["instances", "{{instance_id}}", "metadata"]
+            },
+            "description": "Mengembalikan daftar key metadata yang tersedia untuk instance."
+          }
+        },
+        {
+          "name": "GET /instances/:id/preview — Preview PNG",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/instances/{{instance_id}}/preview",
+              "host": ["{{base_url}}"],
+              "path": ["instances", "{{instance_id}}", "preview"]
+            },
+            "description": "Mendapatkan preview gambar dalam format PNG."
+          }
+        },
+        {
+          "name": "GET /instances/:id/simplified-tags — Tags",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/instances/{{instance_id}}/simplified-tags",
+              "host": ["{{base_url}}"],
+              "path": ["instances", "{{instance_id}}", "simplified-tags"]
+            },
+            "description": "Semua DICOM tags dalam format JSON yang mudah dibaca."
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Tools & Utilities",
+      "description": "Endpoint utility untuk pencarian, monitoring, dan maintenance.",
+      "item": [
+        {
+          "name": "POST /tools/find — Cari Pasien",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/tools/find",
+              "host": ["{{base_url}}"],
+              "path": ["tools", "find"]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Level\": \"Patient\",\n  \"Query\": {\n    \"PatientName\": \"*\"\n  }\n}"
+            },
+            "description": "Cari semua pasien. Wildcard '*' untuk semua."
+          }
+        },
+        {
+          "name": "POST /tools/find — Cari Studi by Date",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/tools/find",
+              "host": ["{{base_url}}"],
+              "path": ["tools", "find"]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Level\": \"Study\",\n  \"Query\": {\n    \"StudyDate\": \"20260427\"\n  }\n}"
+            },
+            "description": "Cari studi berdasarkan tanggal. Format: YYYYMMDD"
+          }
+        },
+        {
+          "name": "POST /tools/find — Cari Series by Modality",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/tools/find",
+              "host": ["{{base_url}}"],
+              "path": ["tools", "find"]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Level\": \"Series\",\n  \"Query\": {\n    \"Modality\": \"DX\"\n  }\n}"
+            },
+            "description": "Cari series berdasarkan modalitas (CT, MR, DX, US, dll)."
+          }
+        },
+        {
+          "name": "POST /tools/find — Cari by PatientName",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/tools/find",
+              "host": ["{{base_url}}"],
+              "path": ["tools", "find"]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Level\": \"Instance\",\n  \"Query\": {\n    \"PatientName\": \"SARIYANI*\"\n  }\n}"
+            },
+            "description": "Cari instance berdasarkan nama pasien dengan wildcard."
+          }
+        },
+        {
+          "name": "GET /tools/lookup — Lookup by UID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/tools/lookup?uid=1.3.6.1.4.1.19179.1.11045202249120203.3.17387.28728",
+              "host": ["{{base_url}}"],
+              "path": ["tools", "lookup"],
+              "query": [
+                { "key": "uid", "value": "1.3.6.1.4.1.19179.1.11045202249120203.3.17387.28728" }
+              ]
+            },
+            "description": "Cari resource berdasarkan DICOM UID."
+          }
+        },
+        {
+          "name": "GET /tools/metrics-prometheus — Metrics",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/tools/metrics-prometheus",
+              "host": ["{{base_url}}"],
+              "path": ["tools", "metrics-prometheus"]
+            },
+            "description": "Endpoint monitoring Prometheus: jumlah resource, disk usage, uptime."
+          }
+        },
+        {
+          "name": "GET /tools/count-resources — Count Resources",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/tools/count-resources",
+              "host": ["{{base_url}}"],
+              "path": ["tools", "count-resources"]
+            },
+            "description": "Menghitung total semua resource dalam database."
+          }
+        },
+        {
+          "name": "POST /tools/create-dicom — Buat DICOM Sintetis",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/tools/create-dicom",
+              "host": ["{{base_url}}"],
+              "path": ["tools", "create-dicom"]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"PatientName\": \"Test^Patient\",\n  \"PatientID\": \"TEST001\",\n  \"PatientSex\": \"O\",\n  \"StudyDescription\": \"Test Study\",\n  \"SeriesDescription\": \"Test Series\"\n}"
+            },
+            "description": "Membuat DICOM sintetis dari JSON. Berguna untuk testing."
+          }
+        },
+        {
+          "name": "POST /tools/reconstruct — Rekonstruksi",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/tools/reconstruct",
+              "host": ["{{base_url}}"],
+              "path": ["tools", "reconstruct"]
+            },
+            "description": "Memaksa Orthanc membaca ulang file DICOM dan memperbarui indeks."
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Changes & Monitoring",
+      "description": "Endpoint untuk melacak perubahan database dan monitoring.",
+      "item": [
+        {
+          "name": "GET /changes — Riwayat Perubahan",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/changes",
+              "host": ["{{base_url}}"],
+              "path": ["changes"]
+            },
+            "description": "Riwayat perubahan database: penambahan pasien, studi, series, instance."
+          }
+        },
+        {
+          "name": "GET /changes/:seq — Perubahan Spesifik",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/changes/135",
+              "host": ["{{base_url}}"],
+              "path": ["changes", "135"]
+            },
+            "description": "Mengembalikan perubahan spesifik berdasarkan nomor sequence."
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Modalities & Peers",
+      "description": "Integrasi dengan perangkat DICOM eksternal dan server Orthanc lain.",
+      "item": [
+        {
+          "name": "GET /modalities — Daftar Modalities",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/modalities",
+              "host": ["{{base_url}}"],
+              "path": ["modalities"]
+            },
+            "description": "Menampilkan daftar modalities DICOM yang terkonfigurasi."
+          }
+        },
+        {
+          "name": "POST /modalities/{name}/echo — Test Koneksi",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/modalities/MY-PACS/echo",
+              "host": ["{{base_url}}"],
+              "path": ["modalities", "MY-PACS", "echo"]
+            },
+            "description": "Mengirim C-ECHO untuk menguji koneksi DICOM ke modality."
+          }
+        },
+        {
+          "name": "POST /modalities/{name}/query — Query Remote",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/modalities/MY-PACS/query",
+              "host": ["{{base_url}}"],
+              "path": ["modalities", "MY-PACS", "query"]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Level\": \"Patient\",\n  \"Query\": {\n    \"PatientName\": \"*\"\n  }\n}"
+            },
+            "description": "Mencari resource di modality remote melalui DICOM query."
+          }
+        },
+        {
+          "name": "POST /modalities/{name}/store — Kirim ke Modality",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/modalities/MY-PACS/store",
+              "host": ["{{base_url}}"],
+              "path": ["modalities", "MY-PACS", "store"]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Resources\": [\"b751523b-985c8066-ba65a368-1d5b8e38-0c9a383a\"]\n}"
+            },
+            "description": "Mengirim resource DICOM ke modality eksternal via C-STORE."
+          }
+        },
+        {
+          "name": "GET /peers — Daftar Peers",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/peers",
+              "host": ["{{base_url}}"],
+              "path": ["peers"]
+            },
+            "description": "Menampilkan daftar server Orthanc lain yang terkonfigurasi."
+          }
+        }
+      ]
+    }
+  ]
+}

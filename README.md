@@ -63,7 +63,14 @@ docker-compose logs orthanc
 | [TUTORIAL-ORTHANC-WEB.md](docs/reference/TUTORIAL-ORTHANC-WEB.md) | Panduan lengkap web interface | ~42KB |
 | [ORTHANC-CHEAT-SHEET.md](docs/reference/ORTHANC-CHEAT-SHEET.md) | Referensi cepat perintah & API | ~12KB |
 | [ORTHANC-FOR-BEGINNERS-COMPLETE.md](docs/reference/ORTHANC-FOR-BEGINNERS-COMPLETE.md) | Panduan pemula: planning hingga deployment online | ~45KB |
+| [ORTHANC-API-REFERENCE.md](docs/reference/ORTHANC-API-REFERENCE.md) | Dokumentasi REST API lengkap dengan contoh teruji | ~25KB |
 | [DOKUMENTASI-LENGKAP-ORTHANC.md](docs/reference/DOKUMENTASI-LENGKAP-ORTHANC.md) | Index/ringkasan yang mereferensi ke file sumber lain | ~3KB |
+
+### Panduan Integrasi
+
+| File | Fokus |
+|------|-------|
+| [orthanc-website-integration.md](docs/plan/orthanc-website-integration.md) | Panduan lengkap integrasi Orthanc dengan website kustom |
 
 ### Panduan Setup Bertahap
 
